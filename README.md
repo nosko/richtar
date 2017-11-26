@@ -1,0 +1,2 @@
+# richtar
+Denna ponuka
