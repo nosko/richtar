@@ -1,26 +1,3 @@
-<?php
-	$doc = new DomDocument();
-	$content = file_get_contents("http://www.richtarjakub.sk/hostinec/piva-na-vycape/");
-	$doc->loadHtml($content);
-	$xpath = new DomXpath($doc);
-
-	$entries = $xpath->query("//div[@class='beerItem']/a");
-
-	if (isset($_GET['api']))
-	{
-		$output = array();
-		foreach($entries as $entry)
-		{
-			if (empty($entry->nodeValue)) continue;
-			$output[] = $entry->nodeValue;
-		}
-
-		echo json_encode($output);
-
-		exit;
-	}
-?>
-
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta property="og:image" content="http://www.richtarjakub.sk/images/logo-richtar-jakub.png">
 <h2>Richtar Jakup live:</h2>
@@ -32,11 +9,11 @@
 		echo "<h3 style='color: red'>Closed. Very sad, Many tears, So no beer </h3>";
 	}
 
-	$entries = $xpath->query("//div[@class='beerItem']/a");
+	$beers = json_decode(file_get_contents("http://noskovic.sk/api_richtar.php"), TRUE);
 	$output = "";
-	foreach($entries as $entry)
+	foreach($beers['beers'] as $beer)
 	{
-		$output .= $entry->nodeValue."<br>";
+		$output .= "<a href='{$beer[detail]}'>{$beer[name]}<img src='{$beer[image]}'></a><br>";
 	}
 
 	echo "<p style='float: left'>".$output."</p>";
